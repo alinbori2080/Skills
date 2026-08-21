@@ -2,6 +2,7 @@
 param(
     [string]$ConfigPath,
     [string]$LogPath,
+    [string]$CodexPath,
     [switch]$Force,
     [switch]$SkipDoctor
 )
@@ -129,7 +130,7 @@ try {
     Set-Content -LiteralPath $ConfigPath -Value $updated -Encoding utf8NoBOM
 
     if (-not $SkipDoctor) {
-        $codexCli = Find-CodexCli
+        $codexCli = if ($CodexPath) { $CodexPath } else { Find-CodexCli }
         if (-not $codexCli) { throw 'Codex CLI not found; cannot verify the repair.' }
         $doctorOutput = & $codexCli doctor --summary --no-color --ascii 2>&1
         if ($LASTEXITCODE -ne 0) {
