@@ -1,0 +1,6 @@
+interface:
+  display_name: "GitHub 代理感知推送"
+  short_description: "Windows 下动态检测本机代理并安全推送 GitHub"
+  default_prompt: "Use $github-proxy-aware-push to inspect this repository and push the authorized changes to GitHub safely."
+policy:
+  allow_implicit_invocation: false

@@ -24,6 +24,16 @@
 - 使用 `codex doctor` 验证，失败时恢复原配置
 - 不修改认证文件，不清理任务、缓存或数据库
 
+### [github-proxy-aware-push](./github-proxy-aware-push)
+
+用于 Windows 浏览器能访问 GitHub、但 Git 直连 `github.com:443` 失败时，动态检测代理并安全推送已授权改动。
+
+- 优先读取 Git、环境变量和 WinINET 的实际代理，再回退到 `127.0.0.1:7897`
+- 代理仅作用于当次 Git 命令，不写入全局配置
+- 只暂存明确文件，推送前检查测试、秘密和分叉
+- 禁止强推，推送后核对本地与远端提交哈希
+- 仅支持显式调用，调用本身不等于授权远端写入
+
 ## 安装
 
 ### 方法一：手动安装
@@ -45,7 +55,7 @@ $skillName = "codex-connection-doctor"
 Copy-Item -Recurse -Force ".\Skills\$skillName" "$env:USERPROFILE\.codex\skills\"
 ```
 
-将 `$skillName` 改为 `editorial-dual-zone-poster`，即可安装海报 Skill。
+将 `$skillName` 改为 `editorial-dual-zone-poster` 或 `github-proxy-aware-push`，即可安装对应 Skill。
 
 安装完成后，重新打开 Codex 或新建任务，让 Codex 重新发现 Skill。
 
@@ -69,11 +79,20 @@ Copy-Item -Recurse -Force ".\Skills\$skillName" "$env:USERPROFILE\.codex\skills\
 
 该 Skill 会先说明将修改的配置文件，再执行备份、修复和验证。修复后需要重新启动 Codex Desktop，并用一个普通任务确认不再重连。
 
+### 通过本机代理安全推送 GitHub
+
+```text
+使用 $github-proxy-aware-push 把当前任务相关改动安全推送到 GitHub main。
+```
+
+该 Skill 会先动态检查 Git、环境变量和 Windows 浏览器代理，只为当前 Git 命令使用验证成功的代理。
+
 ## 运行要求
 
 - 支持本地 Skills 的 Codex 环境
 - `editorial-dual-zone-poster` 需要可用的 `imagegen` 图像生成能力
 - `codex-connection-doctor` 适用于 Windows PowerShell，并需要可用的 Codex CLI
+- `github-proxy-aware-push` 优先适用于 Windows PowerShell，并需要可用的 Git
 - 编辑本地图片或配置时，需要允许 Codex 访问对应文件
 
 ## 目录结构
@@ -81,6 +100,15 @@ Copy-Item -Recurse -Force ".\Skills\$skillName" "$env:USERPROFILE\.codex\skills\
 ```text
 Skills/
 ├─ README.md
+├─ github-proxy-aware-push/
+│  ├─ SKILL.md
+│  ├─ INSTALL.md
+│  ├─ agents/
+│  │  └─ openai.yaml
+│  ├─ scripts/
+│  │  └─ detect-github-proxy.ps1
+│  └─ tests/
+│     └─ test-detect-github-proxy.ps1
 ├─ codex-connection-doctor/
 │  ├─ SKILL.md
 │  ├─ agents/
