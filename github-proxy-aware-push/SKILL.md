@@ -14,6 +14,10 @@ description: Use when Git operations against GitHub on Windows fail or stall whi
 - 不显示含用户名、密码或令牌的远端 URL、代理值、配置或日志。发现疑似凭据时只报告文件路径和风险，不回显内容。
 - 不执行 `git add .`、`git add -A`、`git commit -a`、`push --force` 或永久 `git config --global http.proxy ...`。
 
+## BI-Tool 默认仓库
+
+处理 BI-Tool 的检查、提交、合并或推送时，如果用户没有明确指定其他路径，使用 `C:\Users\zhoujie\Documents\GitHub\BI-Tool`。先验证该目录存在且 `git rev-parse --show-toplevel` 指向它；不要回退到旧目录 `D:\codex\0810\BI-Tool`。用户明确给出的仓库路径始终覆盖此默认值。
+
 ## 1. 发现可用代理
 
 在第一次访问 GitHub 之前运行只读脚本：
